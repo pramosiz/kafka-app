@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "orders", schema = "kafka_test")
+@Table(name = "orders")
 public class Order implements Serializable {
 
     @Id

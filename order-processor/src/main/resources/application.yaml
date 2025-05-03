@@ -6,17 +6,16 @@ spring:
         url: jdbc:postgresql://localhost:5432/test
         username: postgres
         password: postgres
-    batch:
-        jdbc:
-            initialize-schema: always
-            # schema: kafka_test
-            
     jpa:
         properties:
             hibernate:
                 default_schema: kafka_test
                 ddl-auto: update
             dialect: org.hibernate.dialect.PostgreSQLDialect
+    batch:
+        jdbc:
+            initialize-schema: always
+    
     kafka:
         bootstrap-servers: localhost:9092
         producer:
