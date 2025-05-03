@@ -41,6 +41,7 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <!-- Libreria con getters, setters, constructores, etc -->
         <dependency>
