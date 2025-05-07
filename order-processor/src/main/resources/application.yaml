@@ -15,9 +15,13 @@ spring:
     batch:
         jdbc:
             initialize-schema: always
+        job:
+            name: FirstJobTest
     
     kafka:
         bootstrap-servers: localhost:9092
         producer:
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
             value-serializer: org.apache.kafka.common.serialization.StringSerializer
+topics:
+    orders: orders

@@ -12,7 +12,8 @@ public class OrderConsumer {
     @Autowired
     private OrderService orderService;
 
-    @KafkaListener(topics = "orders", groupId = "consumer1", containerFactory = "kafkaListenerContainerFactory")
+    // @KafkaListener(topics = "orders", groupId = "consumer1", containerFactory =
+    // "kafkaListenerContainerFactory")
     public void listen(String orderString) {
         orderService.processOrder(orderString);
     }

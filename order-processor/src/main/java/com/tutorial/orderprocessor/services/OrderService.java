@@ -24,4 +24,14 @@ public class OrderService {
             System.err.println("Error processing order: " + e.getMessage());
         }
     }
+
+    public void processOrder(Order order) {
+        try {
+            order.setLastUpdate(new java.sql.Timestamp(System.currentTimeMillis()));
+            orderRepository.save(order);
+            System.out.println("Processed order: " + order.getId());
+        } catch (Exception e) {
+            System.err.println("Error processing order: " + e.getMessage());
+        }
+    }
 }
