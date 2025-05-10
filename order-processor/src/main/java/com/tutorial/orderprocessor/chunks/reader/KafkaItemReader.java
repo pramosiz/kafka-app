@@ -12,7 +12,9 @@ public class KafkaItemReader implements ItemReader<String> {
 
     private final BlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
-    @KafkaListener(topics = "${topics.orders}", groupId = "test")
+    @KafkaListener(topics = "${topics.orders}", groupId = "test", concurrency = "3")
+    // The concurrency level is set to 3, which means that 3 threads will be used to
+    // consume messages from the Kafka topic.
     public void listen(String message) {
         queue.offer(message);
         System.out.println("Reading message from Kafka: " + message);

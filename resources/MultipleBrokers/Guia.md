@@ -1,0 +1,2 @@
+- Si da error al ejecutar el docker-compose es posible que haya un conflicto en los volúmenes. Probar a eliminarlos y volverlos a crear
+- Si al ejecutar el docker-compose se cae algún contenedor de broker, volver a iniciar el docker-compose sin necesidad de parar todos los contenedores

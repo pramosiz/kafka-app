@@ -48,7 +48,7 @@ services:
       AKHQ_CONFIGURATION: |
         akhq:
           connections:
-            docker-kafka-server:
+            kafka-server:
               properties:
                 bootstrap.servers: "kafka:9093"
     depends_on:

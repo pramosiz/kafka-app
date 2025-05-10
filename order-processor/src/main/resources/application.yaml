@@ -19,9 +19,10 @@ spring:
             name: FirstJobTest
     
     kafka:
-        bootstrap-servers: localhost:9092
-        producer:
-            key-serializer: org.apache.kafka.common.serialization.StringSerializer
-            value-serializer: org.apache.kafka.common.serialization.StringSerializer
+        consumer:
+            bootstrap-servers: localhost:9092,localhost:9094,localhost:9095
+            auto-offset-reset: earliest
+            enable-auto-commit: false
+        
 topics:
-    orders: orders
+    orders: orders3
