@@ -81,3 +81,5 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - /Users/pabloramosizquierdo/Desktop/Pablo/Tecnologias/Dockers/PostgreSQL/data:/var/lib/postgresql/data
+    networks:
+      - kafka-network
