@@ -9,46 +9,60 @@ volumes:
     driver: local
 
 services:
-  zookeeper:
-    container_name: zookeeper
-    image: bitnami/zookeeper:3.8
-    ports:
-      - "2181:2181"
-    volumes:
-      - "zookeeper_data:/bitnami"
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-    networks:
-      - kafka-network
   kafka:
+    image: apache/kafka:4.0.0
     container_name: kafka
-    image: bitnami/kafka:3.9
+    hostname: kafka
     ports:
-      - "9092:9092"
-    volumes:
-      - "kafka_data:/bitnami"
-    environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
-      - KAFKA_CFG_LISTENERS=CLIENT://:9093,EXTERNAL://:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9093,EXTERNAL://localhost:9092
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
-    depends_on:
-      - zookeeper
+        - "9092:9092"
+        # - "9093:9093"
+    environment: # https://kafka.apache.org/documentation/#brokerconfigs_num.partitions
+        
+        KAFKA_NODE_ID: 1
+        KAFKA_PROCESS_ROLES: broker,controller
+        
+        KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+        KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9091
+        KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
+        KAFKA_LISTENERS: CONTROLLER://kafka:9091,HOST://0.0.0.0:9092,DOCKER://0.0.0.0:9093
+        KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092,DOCKER://kafka:9093
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,DOCKER:PLAINTEXT,HOST:PLAINTEXT
+
+        # Required for a single node cluster
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+        KAFKA_BROKER_ID: 1
+        KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+        KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+        KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+        # KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+        CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
     networks:
       - kafka-network
+ 
+#   kafka-ui:
+#       image: provectuslabs/kafka-ui
+#       container_name: kafka-ui
+#       ports:
+#           - "8000:8080"
+#       restart: always
+#       depends_on:
+#           - kafka
+#       environment:
+#           DYNAMIC_CONFIG_ENABLED: 'true'
+#           KAFKA_CLUSTERS_0_NAME: local
+#           KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9093
 
   akhq:
     container_name: akhq
     image: tchiotludo/akhq:0.25.1
     ports:
-      - "8080:8080"
+      - "8000:8080"
     environment:
       AKHQ_CONFIGURATION: |
         akhq:
           connections:
-            kafka-server:
+            kafka-cluster:
               properties:
                 bootstrap.servers: "kafka:9093"
     depends_on:
@@ -56,4 +70,14 @@ services:
     networks:
       - kafka-network
 
-
+  postgres:
+    image: postgres:14.13 
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - /Users/pabloramosizquierdo/Desktop/Pablo/Tecnologias/Dockers/PostgreSQL/data:/var/lib/postgresql/data
