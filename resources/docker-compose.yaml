@@ -2,12 +2,6 @@ networks:
   kafka-network:
     driver: bridge
 
-volumes:
-  zookeeper_data:
-    driver: local
-  kafka_data:
-    driver: local
-
 services:
   kafka:
     image: apache/kafka:4.0.0
